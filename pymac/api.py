@@ -11,6 +11,7 @@ from utils.csvutils import CsvUtils
 from utils.sysConfig import SysConfig
 
 
+
 class Api:
     def __init__(self):
         self.comDevice = SerialDevice()
@@ -19,6 +20,8 @@ class Api:
 
         self.config = SysConfig()
         self.config.load()
+
+
 
     def init(self):
         response = {
@@ -161,9 +164,10 @@ class Api:
             oldPassword = json_params['oldPassword']
             newPassword = json_params['newPassword']
             print("setPassword " + oldPassword + ":" + oldPassword)
-            oldPwd = self.config.getOption("ADMIN_PWD", "pwd")
-            if oldPwd == oldPassword:
+            savedPwd = self.config.getOption("ADMIN_PWD", "pwd")
+            if savedPwd == oldPassword:
                 self.config.setOption("ADMIN_PWD", "pwd", newPassword)
+                self.config.save()  # Save changes
                 response = {
                     'code': 200,
                     'message': 'ok',

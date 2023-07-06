@@ -10,12 +10,12 @@ class SysConfig:
 
     def load(self):
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        cfgFilePath = current_dir+"\\..\\config.ini"
+        cfgFilePath = current_dir+"/../config.ini"
         self.config.read(cfgFilePath)
 
     def save(self):
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        cfgFilePath = current_dir + "\\..\\config.ini"
+        cfgFilePath = current_dir + "/../config.ini"
         try:
             with open(cfgFilePath, mode='w' ) as fp:
                 self.config.write(fp)
