@@ -1,13 +1,19 @@
 <template>
   <div id="app">
+    <NavigationMenu />
     <span style="font-size:32px;color:blue;margin-bottom:20px">角度标定系统</span>
     <router-view/>
   </div>
 </template>
 
 <script>
+import NavigationMenu from '@/views/NavigationMenu.vue'
+
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    NavigationMenu
+  }
 }
 </script>
 
