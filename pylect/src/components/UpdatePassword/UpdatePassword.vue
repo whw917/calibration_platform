@@ -85,7 +85,7 @@
           password: value,
         };
         pywebview.api.checkPassword(JSON.stringify(params)).then((res) => {
-          if (res.status === "error") {
+          if (res.code === 201) {
             callback(new Error("旧密码错误"));
           } else {
             callback();

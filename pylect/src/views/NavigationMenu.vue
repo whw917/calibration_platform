@@ -70,10 +70,6 @@
             this.$router.push('/process-management'); 
             break;
 
-            case 'SystemParameter':
-            this.$router.push('/system-parameter'); 
-            break;
-
             case 'DataSearch':
             this.$router.push('/data-search'); 
             break;
@@ -90,13 +86,10 @@
             this.$router.push('/system-parameter'); 
             break;
 
-            
-
             case 'UpdatePassword':
             this.$router.push('/update-password'); 
             break;
             
-
             case 'TestPage':
             this.$router.push('/test-page'); 
             break;
