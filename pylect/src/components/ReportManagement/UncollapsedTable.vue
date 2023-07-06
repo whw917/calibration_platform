@@ -13,16 +13,7 @@
 
           
         <Col >
-            <Table border :columns="columns" :data="data">
-                <template v-slot:action="{ row }"> 
-
-                    <a @click="edit(row)" >编辑</a>
-                    <Divider type="vertical" />
-                    <a @click="remove(row)" >预览</a>
-
-                </template>
-            </Table>
-            
+            <Table border :columns="columns" :data="data"></Table>
         </Col>
 
 
@@ -111,7 +102,8 @@
                 title: '操作',
                 align: "center",
                 dataIndex: 'operation',
-                slot: 'action'  // Here we define a slot named 'action'
+                scopedSlots: { customRender: 'operation' },
+                scopedSlots: { customRender: "operation" },
                 //width: 240,
             },
             ],
@@ -121,21 +113,13 @@
 
             data: [
                 {
-                    taskName: 'New York',
+                    taskName: 'London',
                 
                 }
             ],
         }
         },
         methods: {
-            edit(row) {
-                console.log('Edit operation for', row)
-                // handle edit operation here
-            },
-            remove(row) {
-                console.log('Delete operation for', row)
-                // handle delete operation here
-            }
         }
 
   }

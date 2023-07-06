@@ -10,8 +10,13 @@
 .search-bar{
     width: 80%;
     margin: auto;
-  
 }
+
+.table-page{
+    width: 80%;
+    margin: auto;
+}
+
 </style>
 
 <template>
@@ -46,7 +51,7 @@
                 </Col>
 
                 <Col span="3" align="left">
-                    <Checkbox v-model="collapse">合并同一个设备报告</Checkbox>
+                    <Checkbox v-model="isCollapse">合并同一个设备报告</Checkbox>
                 </Col>
 
                 <Col span="4" align="right">
@@ -54,10 +59,21 @@
                 </Col>
             </Row>
 
-            <CollapsedTable/>
+            <div class="table-page">
 
+                <Row  style="display: flex; justify-content: space-between;" glutter="32"> 
+                    <Col  flex="1">
+                      <Table border :columns="columns" :data="data"></Table>
+                    </Col>
+                  
+                    <Col flex="7"> 
+                        
+                        <CollapsedTable  v-if="!isCollapse" />
+                        <UncollapsedTable v-else />
 
-            
+                    </Col>
+                </Row>
+            </div>   
             
         </Form>
   
@@ -67,6 +83,7 @@
   <script>
   import { Input, Button, Table, Page, Space, model, FormItem, Collapse} from 'view-design'
   import CollapsedTable from './CollapsedTable.vue'
+  import UncollapsedTable from './UncollapsedTable.vue'
 
   export default {
     components: {
@@ -77,16 +94,35 @@
       FormItem,
 
       CollapsedTable,
+      UncollapsedTable,
 
     },
-    // your data and methods...
-
     data() {
         return {
-            collapse: false,
+            isCollapse: false,
             queryParam: {
                 searchRecord: '',
             },
+
+            columns: [
+                {
+                type: 'selection',
+                align: 'center',
+                width: '10%',
+                },
+                {
+                    title: '任务名称',
+                    dataIndex: 'taskName',
+                    align:"center",
+                },
+            ],
+
+            data: [
+                {
+
+                }
+            ],
+
             choicelist: [
                     {
                         value: 'all',
