@@ -25,18 +25,20 @@
 
         <Form class="search-form" ref="formRef" :model="queryParam"  >
             <Row class="search-bar" glutter="16">
+                <!-- 时间查询 -->
                 <Col span="6" align="left">
                     <FormItem label="选择时间:" > 
-                        <DatePicker type="daterange" placement="bottom-end" placeholder="Select date" style="width: 70%" />
+                        <DatePicker v-model="queryParam.dateRecord" type="daterange" placement="bottom-end" placeholder="Select date" style="width: 70%" />
                     </FormItem>
                 </Col>
-
+                <!-- 任务名称，设备编号或芯片号 模糊查询 -->
                 <Col span="5" align="left">
                     <FormItem >
                     <Input search v-model="queryParam.searchRecord" placeholder="请输入任务名称，设备编号或芯片号" style="width: 90%" />
                     </FormItem>
                 </Col>
 
+                <!-- 下滑列表选择 -->
                 <Col span="2" align="left">
                     <FormItem >
                         <Select  style="width:80%">
@@ -45,11 +47,12 @@
                     </FormItem>
                 </Col>
 
-
+                <!-- 查询按钮 -->
                 <Col span="2" align="left">
                     <Button type="primary" @click="searchQuery" icon="search">查询</Button>
                 </Col>
 
+                <!-- 选择合并 -->
                 <Col span="3" align="left">
                     <Checkbox v-model="isCollapse">合并同一个设备报告</Checkbox>
                 </Col>
@@ -101,6 +104,7 @@
         return {
             isCollapse: false,
             queryParam: {
+                dateRecord: '',
                 searchRecord: '',
             },
 
