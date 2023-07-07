@@ -128,14 +128,6 @@
         }
         },
         methods: {
-            edit(row) {
-                console.log('Edit operation for', row)
-                // handle edit operation here
-            },
-            remove(row) {
-                console.log('Delete operation for', row)
-                // handle delete operation here
-            }
         }
 
   }
