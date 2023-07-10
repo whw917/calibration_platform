@@ -1,5 +1,11 @@
 <template>
-  <div ref="chart" class="lineChart" label="测量者"></div>
+  <div>
+    <h2>测量值数据曲线</h2>
+    <div ref="chart" class="lineChart"></div>
+    <Checkbox v-model="show1">showA</Checkbox>
+    <Checkbox v-model="show2">showB</Checkbox>
+  </div>
+  
 </template>
 
 <script>
@@ -8,7 +14,9 @@ import * as echarts from 'echarts'
 export default {
   data() {
     return {
-      chart: null
+      show1: false,
+      show2: false,
+      chart: null,
     }
   },
   mounted() {
@@ -19,15 +27,17 @@ export default {
       },
       legend: {
         data: [
-          //{ name: '土壤含水量', icon: 'circle' },
-          
+          { name: '测量值', icon: 'circle' },
+          { name: '参考值', icon: 'circle' },
+          { name: '差距', icon: 'circle' }
+
         ],
         itemWidth: 6,
         itemHeight: 6,
         itemGap: 30,
         textStyle: {
           color: '#333',
-          fontSize: 20,
+          fontSize: 12,
           lineHight: 20
         }
       },
@@ -43,7 +53,7 @@ export default {
               color: '#333'
             }
           },
-          data: ['2020/11/24 09:56:23', '2020/11/25 09:56:23', '2020/11/26 09:56:23', '2020/11/27 09:56:23']
+          //data: [-90, -60,-30,0,30,60,90]
         }
       ],
       yAxis: [
@@ -59,22 +69,11 @@ export default {
       ],
       series: [
         {
-          name: '土壤含水量',
+          name: '测量值',
           type: 'line',
           smooth: true,
-          data: [320, 332, 301, 334]
-        },
-        {
-          name: '土壤温度',
-          type: 'line',
-          smooth: true,
-          data: [120, 132, 101, 134]
-        },
-        {
-          name: '土壤电导率',
-          type: 'line',
-          smooth: true,
-          data: [862, 1018, 964, 1026],
+          data: [[-90,2],[-70,2],[-60,3],[-40,5],[-30,2],[-10,1],[0,2],[10,2],[30,2],[60,5],[70,4],[90,2],],
+
           markLine: {
             lineStyle: {
               type: 'dashed'
@@ -83,7 +82,21 @@ export default {
               [{ type: 'min' }, { type: 'max' }]
             ]
           }
-        }
+        },
+        {
+          name: '参考值',
+          type: 'line',
+          smooth: true,
+          data: [[-90,1],[-60,2],[-30,5],[0,3],[30,1],[60,2],[90,3],],
+        },
+        {
+          name: '差距',
+          type: 'line',
+          smooth: true,
+          data: [[-90,2],[-60,2],[-30,3],[0,4],[30,1],[60,2],[90,2],],
+          
+        },
+        
       ]
     })
   }
