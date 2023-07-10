@@ -11,8 +11,9 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "echarts": "^5.4.2",
     "view-design": "^4.5.0",
-    "vue": "^2.5.2",
+    "vue": "^2.7.14",
     "vue-router": "^3.0.1",
     "xlsx": "^0.13.5"
   },

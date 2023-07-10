@@ -16,9 +16,9 @@
             <Table border :columns="columns" :data="data">
                 <template v-slot:action="{ row }"> 
 
-                    <a @click="edit(row)" >编辑</a>
+                    <a @click="expand(row)" >详情</a>
                     <Divider type="vertical" />
-                    <a @click="remove(row)" >预览</a>
+                    <a @click="preview(row)" >预览报告</a>
 
                 </template>
             </Table>
@@ -63,56 +63,48 @@
                 align:"center",
                 type: "index",
             },
-            {
-                title: '标定任务名称',
-                align: "center",
-                dataIndex: 'taskName',
-                key: "taskName"
-                //width: 240,
-            },
             
             {
                 title: '设备编号',
                 align: "center",
                 dataIndex: 'equiNumber',
-                //width: 240,
-            },
-            {
-                title: '芯片号',
-                align: "center",
-                dataIndex: 'equiName',
+                key:'equiNumber'
                 //width: 240,
             },
             {
                 title: '传感器类型',
                 align: "center",
                 dataIndex: 'equiType',
+                key: 'equiType',
                 //width: 240,
             },
             {
                 title: '标定日期',
                 align: "center",
                 dataIndex: 'caliTime',
+                key: 'caliTime',
                 //width: 240,
             },
             {
                 title: '精度',
                 align: "center",
                 dataIndex: 'precise',
+                key: 'precise',
                 width: 100,
             },
             {
                 title: '结论',
                 align: "center",
                 dataIndex: 'conclusion',
+                key: 'conclusion',
                 width: 100,
             },
             {
                 title: '操作',
                 align: "center",
                 dataIndex: 'operation',
-                slot: 'action'  // Here we define a slot named 'action'
-                //width: 240,
+                slot: 'action',  // Here we define a slot named 'action'
+                width: 150,
             },
             ],
 
@@ -128,12 +120,12 @@
         }
         },
         methods: {
-            edit(row) {
-                console.log('Edit operation for', row)
-                // handle edit operation here
+            expand(row) {
+                // Use the $router.push method to navigate
+                this.$router.push({ name: 'ReportDetail', params: { rowData: row } });
             },
-            remove(row) {
-                console.log('Delete operation for', row)
+            preview(row) {
+                console.log('preiview operation for', row)
                 // handle delete operation here
             }
         }
