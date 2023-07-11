@@ -12,7 +12,7 @@
                 主页面
               </DropdownItem>
 
-              <DropdownItem name="ProcessManagement">
+              <DropdownItem name="FlowManagement">
                 <Icon type="md-settings"></Icon>
                 流程管理
               </DropdownItem>
@@ -66,8 +66,8 @@
             this.$router.push('/'); // Go to Home page
             break;
 
-            case 'ProcessManagement':
-            this.$router.push('/process-management'); 
+            case 'FlowManagement':
+            this.$router.push('/flow-management'); 
             break;
 
             case 'DataSearch':

@@ -21,7 +21,7 @@
 
 <template>
     <div>
-        <h2 class="title">数据查询</h2>
+        <h2 class="title">标定流程管理</h2>
 
         <Form class="search-form" ref="formRef" :model="queryParam"  >
             <Row class="search-bar" glutter="16">
@@ -46,7 +46,7 @@
             </Row>
 
             <div class="table-page">
-                <ProcessTable/>
+                <FlowTable/>
             </div>   
 
         </Form>
@@ -56,7 +56,7 @@
   
   <script>
   import { Input, Button, Table, Page, Space, model, FormItem} from 'view-design'
-  import ProcessTable from './processTable.vue'
+  import FlowTable from './FlowTable.vue'
 
   export default {
     components: {
@@ -66,7 +66,7 @@
       Page,
       FormItem,
 
-      ProcessTable,
+      FlowTable,
 
     },
     data() {

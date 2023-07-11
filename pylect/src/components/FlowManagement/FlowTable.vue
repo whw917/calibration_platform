@@ -11,6 +11,13 @@
 <template>
     <div >
             <Table border :columns="columns" :data="data">
+                <template v-slot:operation="{ row }"> 
+
+                    <a @click="edit(row)" >编辑</a>
+                    <Divider type="vertical" />
+                    <a @click="deleteRow(row)" >删除</a>
+
+                </template>
             </Table>
 
         <div class="page-bar">
@@ -144,8 +151,8 @@
                 align: "center",
                 dataIndex: 'operation',
                 fixed: 'right',
-                //slot: 'action'  // Here we define a slot named 'action'
-                width: 160,
+                slot: 'operation',
+                width: 150,
             },
             
             ],
@@ -161,6 +168,14 @@
         }
         },
         methods: {
+            edit(row) {
+                // Use the $router.push method to navigate
+                console.log('edit operation for', row)
+            },
+            deleteRow(row) {
+                console.log('preiview operation for', row)
+                // handle delete operation here
+            }
         }
 
   }

@@ -5,7 +5,7 @@ import Router from 'vue-router'
 import Home from '@/views/home'
 import DataSearch from '@/components/DataSearch/DataSearch.vue';
 import LogManagement from '@/components/LogManagement/LogManagement.vue';
-import ProcessManagement from '@/components/ProcessManagement/ProcessManagement.vue';
+import FlowManagement from '@/components/FlowManagement/FlowManagement.vue';
 import ReportManagement from '@/components/ReportManagement/ReportManagement.vue';
 import SystemParameter from '@/components/SystemParameter/SystemParameter.vue';
 import UpdatePassword from '@/components/UpdatePassword/UpdatePassword.vue';
@@ -49,9 +49,9 @@ export default new Router({
       component: UpdatePassword,
     },
     {
-      path: '/process-management',
-      name: 'ProcessManagement',
-      component: ProcessManagement,
+      path: '/flow-management',
+      name: 'FlowManagement',
+      component: FlowManagement,
     },
     {
       path: '/test-page',

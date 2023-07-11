@@ -14,7 +14,7 @@
           
         <Col >
             <Table border :columns="columns" :data="data">
-                <template v-slot:action="{ row }"> 
+                <template v-slot:operation="{ row }"> 
 
                     <a @click="expand(row)" >详情</a>
                     <Divider type="vertical" />
@@ -103,7 +103,7 @@
                 title: '操作',
                 align: "center",
                 dataIndex: 'operation',
-                slot: 'action',  // Here we define a slot named 'action'
+                slot: 'operation',  // Here we define a slot named 'operation'
                 width: 150,
             },
             ],
