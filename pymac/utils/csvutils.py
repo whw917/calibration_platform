@@ -9,12 +9,12 @@ from utils.dateUtils import DateUtils
 class CsvUtils:
     def __init__(self):
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        cfgFilePath = current_dir + "\\..\\data\\sensor_list.csv"
+        cfgFilePath = current_dir + "/../data/sensor_list.csv"
         self.fileName = cfgFilePath
 
     def reset(self):
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        cfgFilePath = current_dir + "\\..\\data\\sensor_list_"
+        cfgFilePath = current_dir + "/../data/sensor_list_"
         os.rename(self.fileName, cfgFilePath + self.now2fullName() + ".csv")
 
     def now2fullName(self):
@@ -23,7 +23,7 @@ class CsvUtils:
 
     def readChannelList(self):
         #读取csv文件
-        # with open("C:\\Users\\A9050031\\Desktop\\test.csv", "r") as f:
+        # with open("C:/Users/A9050031/Desktop/test.csv", "r") as f:
         rows = []
         with open(self.fileName, "r") as f:
             reader = csv.reader(f)
@@ -35,10 +35,10 @@ class CsvUtils:
 
     def read(self, csv_file):
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        cfgFilePath = current_dir + "\\..\\data\\" + csv_file
+        cfgFilePath = current_dir + "/../data/" + csv_file
 
         #读取csv文件
-        # with open("C:\\Users\\A9050031\\Desktop\\test.csv", "r") as f:
+        # with open("C:/Users/A9050031/Desktop/test.csv", "r") as f:
         rows = []
         with open(cfgFilePath, "r") as f:
             reader = csv.reader(f)
@@ -50,7 +50,7 @@ class CsvUtils:
 
     def write(self, rows, csv_file):
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        cfgFilePath = current_dir + "\\..\\data\\" + csv_file
+        cfgFilePath = current_dir + "/../data/" + csv_file
 
         # row = ['7', 'hanmeimei', '23', '81', '78', '78']
         out = open(cfgFilePath, "w", newline="")
@@ -59,7 +59,7 @@ class CsvUtils:
 
     def writeChannelLis(self, rows):
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        cfgFilePath = current_dir + "\\..\\data\\sensor_list.csv"
+        cfgFilePath = current_dir + "/../data/sensor_list.csv"
         # row = ['7', 'hanmeimei', '23', '81', '78', '78']
         out = open(cfgFilePath, "w+", newline="")
         csv_writer = csv.writer(out, dialect="excel")
@@ -68,7 +68,7 @@ class CsvUtils:
     def insertCalibrationRow(self, rows):
         try:
             current_dir = os.path.dirname(os.path.abspath(__file__))
-            cfgFilePath = current_dir + "\\..\\data\\calibration_" + DateUtils.dateFileName()+".csv"
+            cfgFilePath = current_dir + "/../data/calibration_" + DateUtils.dateFileName()+".csv"
             # row = ['7', 'hanmeimei', '23', '81', '78', '78']
             header = ""
             if not os.path.exists(cfgFilePath):

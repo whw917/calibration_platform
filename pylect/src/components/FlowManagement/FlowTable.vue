@@ -10,7 +10,7 @@
 
 <template>
     <div >
-            <Table border :columns="columns" :data="data">
+            <Table border :columns="columns" :data="flowData">
                 <template v-slot:operation="{ row }"> 
 
                     <a @click="edit(row)" >编辑</a>
@@ -30,7 +30,9 @@
   <script>
   import { Row, Input, Button, Table, Page, Space, FormItem, resolveComponent} from 'view-design'
   
+  
   export default {
+    props: ['flowData'],
     components: {
     Input,
     Button,
@@ -40,6 +42,10 @@
     FormItem,
     Row
 },
+
+    
+
+    
 
     data() {
         return {
@@ -56,94 +62,94 @@
             {
                 title: '流程名称',
                 align: "center",
-                dataIndex: 'processName',
-                key: 'processName',
+                dataIndex: 'flow_name',
+                key: 'flow_name',
                 fixed: "left",
                 width: 160,
             },
             {
                 title: '流程类型',
                 align: "center",
-                dataIndex: 'processType',
-                key: 'processType',
+                dataIndex: 'flow_type',
+                key: 'flow_type',
                 fixed: "left",
                 width: 100,
             },
             {
                 title: '驱动协议',
                 align: "center",
-                dataIndex: 'driveCont',
-                key: 'driveCont',
+                dataIndex: 'driver',
+                key: 'driver',
                 width: 160,
             },
             {
                 title: '传感器协议',
                 align: "center",
-                dataIndex: 'equiCont',
-                key: "equiCont",
+                dataIndex: 'sensor_protocol',
+                key: "sensor_protocol",
                 width: 160,
             },
             {
                 title: '设备名称',
                 align: "center",
-                dataIndex: 'equiName',
-                key: 'equiName',
+                dataIndex: 'device_name',
+                key: 'device_name',
                 width: 160,
             },
             {
                 title: '设备协议',
                 align: "center",
-                dataIndex: 'equiCont',
-                key: 'equiCont',
+                dataIndex: 'device_protocol',
+                key: 'device_protocol',
                 width: 160,
             },
             {
                 title: '运动时间(s)',
                 align: "center",
-                dataIndex: 'actionTime',
-                key: 'actionTime',
+                dataIndex: 'move_seconds',
+                key: 'move_seconds',
                 width: 120,
             },
             {
                 title: '读秒延迟(s)',
                 align: "center",
-                dataIndex: 'delayTime',
-                key: 'delayTime',
+                dataIndex: 'wait_seconds',
+                key: 'wait_seconds',
                 width: 120,
             },
             {
                 title: '读数次数',
                 align: "center",
-                dataIndex: 'actionTime',
-                key: 'actionTime',
+                dataIndex: 'read_times',
+                key: 'read_times',
                 width: 120,
             },
             {
                 title: '平台精度',
                 align: "center",
-                dataIndex: 'accuracy',
-                key: 'accuracy',
+                dataIndex: 'precise',
+                key: 'precise',
                 width: 120,
             },
             {
                 title: '传感器轴数',
                 align: "center",
-                dataIndex: 'equiNumber',
-                key: 'equiNumber',
+                dataIndex: 'sensor_sum',
+                key: 'sensor_sum',
                 width: 120,
             },
             {
                 title: '传感器名称',
                 align: "center",
-                dataIndex: 'equiName',
-                key: 'equiName',
+                dataIndex: 'sensor_name',
+                key: 'sensor_name',
                 width: 160,
             },
             {
                 title: '点数列表',
                 align: "center",
-                dataIndex: 'pointList',
-                key: 'pointList',
+                dataIndex: 'scale_list',
+                key: 'scale_list',
                 width: 160,
             },
             {
@@ -159,24 +165,39 @@
 
             data: [
                 {
-                    processType: '查询',
-                    equiCont: 1,
-                    delayTime: 10,
-                    actionTime: 4, 
+                    flow_type: '查询',
+                    device_protocol: 1,
+                    wait_seconds: 10,
+                    move_seconds: 4, 
                 },
             ],
         }
         },
-        methods: {
-            edit(row) {
-                // Use the $router.push method to navigate
-                console.log('edit operation for', row)
-            },
-            deleteRow(row) {
-                console.log('preiview operation for', row)
-                // handle delete operation here
-            }
+    
+    mounted(){
+        this.refresh()
+    },
+    methods: {
+        refresh(){
+            queryFlow({}, (res) => {
+                if(res.code === 200){
+                    this.flowData = res.result
+                } else {
+                    this.$Message.error('Failed to fetch flow data.')
+                }
+            })
+        },
+        edit(row) {
+            // Use the $router.push method to navigate
+            console.log('edit operation for', row)
+            //this.$emit('refresh');
+        },
+        deleteRow(row) {
+            console.log('preiview operation for', row)
+            //this.$emit('refresh');
+            // handle delete operation here
         }
+    }
 
   }
   </script>

@@ -83,7 +83,16 @@
         }
         },
         methods: {
-        }
+        },
+        created() {
+            pywebview.api.get_log_data().then(response => {
+                if (response.code === 200) {
+                    this.data = response.result;
+                } else {
+                    console.error('Error fetching log data:', response.message);
+                }
+            });
+        },
 
   }
   </script>

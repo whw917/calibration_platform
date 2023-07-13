@@ -46,7 +46,8 @@
             </Row>
 
             <div class="table-page">
-                <FlowTable/>
+                <FlowTable :flowData="flowData"/>
+
             </div>   
 
         </Form>
@@ -69,19 +70,29 @@
       FlowTable,
 
     },
+    flowData: [],
     data() {
         return {
             isCollapse: false,
             queryParam: {
-                dateRecord: '',
-                taskRecord: '',
-                valueRecord: '',
+                searchRecord: '',
+                columnRecord: '',
+                orderRecord: '',
             },
+            flowData: [],  // Move flowData here
         }
+    },
+    mounted() {
+        handleSearch(this.queryParam, result => {
+            this.flowData = result;
+        });
     },
     methods :{
         searchQuery(){
-            console.log('search ' )
+            console.log('search ' ) ;
+            handleSearch(this.queryParam, result => {
+                this.flowData = result;
+            });
         },
         createNew(){
             console.log('creat new' )
@@ -95,4 +106,20 @@
     }
 
   }
+
+  function handleSearch(queryParam, callback){
+    const params = {
+        keyword: queryParam.searchRecord,
+        column: 'time',  // Sort by time, for example
+        orderby: 'desc',  // In descending order, for example
+    };
+    pywebview.api.queryFlow(JSON.stringify(params)).then(response => {
+        if (response.code === 200) {
+            callback(response.result);
+        } else {
+            console.error('Error fetching flow data:', response.message);
+        }
+    });
+}
+
   </script>

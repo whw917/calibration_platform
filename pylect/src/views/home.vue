@@ -21,7 +21,7 @@
   border-radius: 3px;
   margin: 15px auto;
 }
-
+ 
 .menu-icon {
   transition: all 0.3s;
 }
