@@ -32,7 +32,6 @@
   
   
   export default {
-    props: ['flowData'],
     components: {
     Input,
     Button,
@@ -43,12 +42,16 @@
     Row
 },
 
-    
-
-    
-
     data() {
         return {
+            flowData: [],
+
+            queryParam: {
+                searchRecord: '',
+                columnRecord: '',
+                orderRecord: '',
+            },
+            
             columns: [
             {
                 title: '序号',
@@ -80,21 +83,21 @@
                 align: "center",
                 dataIndex: 'driver',
                 key: 'driver',
-                width: 160,
+                width: 180,
             },
             {
                 title: '传感器协议',
                 align: "center",
                 dataIndex: 'sensor_protocol',
                 key: "sensor_protocol",
-                width: 160,
+                width: 180,
             },
             {
                 title: '设备名称',
                 align: "center",
                 dataIndex: 'device_name',
                 key: 'device_name',
-                width: 160,
+                width: 180,
             },
             {
                 title: '设备协议',
@@ -174,18 +177,41 @@
         }
         },
     
-    mounted(){
-        this.refresh()
+    beforeCreate() {
+        this.isPyWebViewReady = (typeof pywebview !== 'undefined');
+    },
+    created() {
+        if (this.isPyWebViewReady) {
+            this.fetchFlowData(this.queryParam);
+        }
+    },
+    mounted() {
+        if (!this.isPyWebViewReady) {
+            window.addEventListener('load', () => {
+                this.fetchFlowData(this.queryParam);
+            });
+        }
     },
     methods: {
-        refresh(){
-            queryFlow({}, (res) => {
-                if(res.code === 200){
-                    this.flowData = res.result
-                } else {
-                    this.$Message.error('Failed to fetch flow data.')
-                }
-            })
+        fetchFlowData(queryParam) {
+            if (typeof pywebview === 'undefined') {
+            console.log('pywebview is not yet defined. Retrying in 1 second...');
+            setTimeout(() => this.fetchFlowData(queryParam), 10);
+            return;
+        }
+            const params = {
+            keyword: queryParam ? queryParam.searchRecord : '',
+            column: 'time',  // Sort by time, for example
+            orderby: 'desc',  // In descending order, for example
+            };
+
+            pywebview.api.queryFlow(JSON.stringify(params)).then(response => {
+            if (response.code === 200) {
+                this.flowData = response.result;
+            } else {
+                console.error('Error fetching flow data:', response.message);
+            }
+            });
         },
         edit(row) {
             // Use the $router.push method to navigate
