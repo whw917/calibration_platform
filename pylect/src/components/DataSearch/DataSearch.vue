@@ -102,8 +102,11 @@
                 column: '',
                 orderBy: '',
             },
-
-            taskList: [
+            taskParam: {
+                dateRecord: '',
+            },
+            taskList: [],
+            List: [
                     {
                         value: 'task1',
                         label: '任务1'
@@ -130,10 +133,62 @@
             ],
         }
     },
+
+    watch: {
+        taskList(newTaskList) {
+            // If the new task list is not empty and it doesn't include the current task ID,
+            // then update the task ID to the value of the first task in the new list.
+            if (newTaskList.length > 0 && !newTaskList.map(task => task.value).includes(this.queryParam.taskId)) {
+                this.queryParam.taskId = newTaskList[0].value;
+            }
+        },
+        valueList(newValueList) {
+            // If the new value list is not empty and it doesn't include the current calc type,
+            // then update the calc type to the value of the first item in the new list.
+            if (newValueList.length > 0 && !newValueList.map(value => value.value).includes(this.queryParam.calcType)) {
+                this.queryParam.calcType = newValueList[0].value;
+            }
+        }
+    },
+    //刷新pywebview
+    beforeCreate() {
+            this.isPyWebViewReady = (typeof pywebview !== 'undefined');
+        },
+        created() {
+            if (this.isPyWebViewReady) {
+                this.updateTaskList(this.taskParam);
+            }
+        },
+        mounted() {
+            if (!this.isPyWebViewReady) {
+                window.addEventListener('load', () => {
+                    this.updateTaskList(this.taskParam);
+                });
+            }
+    },
+
     methods :{
         searchQuery() {
             this.$refs.dataSearchTable.fetchFlowData(this.queryParam);
             console.log(this.queryParam);
+        },
+        updateTaskList(queryParam) {
+            if (typeof pywebview === 'undefined') {
+                console.log('pywebview is not yet defined. Retrying in 1 second...');
+                setTimeout(() => this.updateTaskList(queryParam), 1000);
+                return;
+            }
+            const params = {
+                dateRecord: queryParam ? queryParam.dateRecord : '',
+            };
+            pywebview.api.queryTask(JSON.stringify(params)).then(response => {
+            if (response.code === 200) {
+                this.taskList = response.result.map(task => ({ value: task, label: task }));
+                this.$refs.dataSearchTable.taskList = this.taskList; // Update the prop in child component
+            } else {
+                console.error('Error fetching task list:', response.message);
+            }
+        });
         },
     }
 

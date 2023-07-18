@@ -26,17 +26,18 @@
   
   export default {
     components: {
-    Input,
-    Button,
-    Table,
-    Page,
-    Space,
-    FormItem,
-    Row
-},
+        Input,
+        Button,
+        Table,
+        Page,
+        Space,
+        FormItem,
+        Row
+    },
 
     data() {
         return {
+
             queryParam: {
                 deviceCode: '',
                 dateRecord: '',
