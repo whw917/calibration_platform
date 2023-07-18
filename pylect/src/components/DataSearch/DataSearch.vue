@@ -25,6 +25,13 @@
 
         <Form class="search-form" ref="formRef" :model="queryParam"  >
             <Row class="search-bar" glutter="16">
+
+                <Col span="7" align="left">
+                    <FormItem >
+                    <Input search v-model="queryParam.deviceCode" placeholder="请输入设备号SN" style="width: 90%" />
+                    </FormItem>
+                </Col>
+
                 <!-- 时间查询 -->
                 <Col span="6" align="left">
                     <FormItem label="选择时间:" > 
@@ -37,7 +44,7 @@
                 <Col span="5" align="left">
                     <FormItem label="任务列表:">
                         <Select  style="width:70%">
-                            <Option v-model="queryParam.taskRecord" v-for="item in taskList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                            <Option v-model="queryParam.taskId" v-for="item in taskList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                         </Select>
                     </FormItem>
                 </Col>
@@ -46,7 +53,7 @@
                 <Col span="3" align="left">
                     <FormItem >
                         <Select  style="width:70%">
-                            <Option v-model="queryParam.valueRecord" v-for="item in valueList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                            <Option v-model="queryParam.calcType" v-for="item in valueList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                         </Select>
                     </FormItem>
                 </Col>
@@ -60,7 +67,7 @@
             </Row>
 
             <div class="table-page">
-                <DataSearchTable/>
+                <DataSearchTable ref="dataSearchTable"/>
             </div>   
 
         </Form>
@@ -85,11 +92,15 @@
     },
     data() {
         return {
-            isCollapse: false,
             queryParam: {
+                deviceCode: '',
                 dateRecord: '',
-                taskRecord: '',
-                valueRecord: '',
+                taskId: '',
+                calcType: '',
+                page: '',
+                pageSize: '',
+                column: '',
+                orderBy: '',
             },
 
             taskList: [
@@ -120,8 +131,9 @@
         }
     },
     methods :{
-        searchQuery(){
-
+        searchQuery() {
+            this.$refs.dataSearchTable.fetchFlowData(this.queryParam);
+            console.log(this.queryParam);
         },
     }
 

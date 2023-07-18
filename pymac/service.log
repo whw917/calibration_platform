@@ -40903,3 +40903,38 @@
 2023-07-06 10:01:25,886 - service.log - INFO - SERVICE STARTED
 2023-07-06 10:36:36,124 - service.log - INFO - SERVICE STARTED
 2023-07-06 10:45:21,665 - service.log - INFO - SERVICE STARTED
+2023-07-06 10:51:32,285 - service.log - INFO - SERVICE STARTED
+2023-07-07 14:27:13,875 - service.log - INFO - WRITE BYTES: BA00EA600003033100C350000A000A92FE
+2023-07-07 14:27:13,905 - service.log - ERROR - SerialException
+2023-07-07 14:27:13,905 - service.log - ERROR - Attempting to use a port that is not open
+2023-07-07 14:27:13,905 - service.log - INFO - writeSerial completed
+2023-07-07 14:27:14,503 - service.log - ERROR - SerialException
+2023-07-07 14:27:14,503 - service.log - ERROR - [Errno 2] could not open port COM20: [Errno 2] No such file or directory: 'COM20'
+2023-07-07 14:27:14,503 - service.log - INFO - openSerial end
+2023-07-10 09:45:36,119 - service.log - INFO - SERVICE STARTED
+2023-07-10 12:29:20,228 - service.log - INFO - SERVICE STARTED
+2023-07-10 14:45:30,140 - service.log - INFO - SERVICE STARTED
+2023-07-12 12:01:00,681 - service.log - INFO - SERVICE STARTED
+2023-07-12 14:15:48,281 - service.log - ERROR - SerialException
+2023-07-12 14:15:48,284 - service.log - ERROR - [Errno 2] could not open port COM30: [Errno 2] No such file or directory: 'COM30'
+2023-07-12 14:15:48,284 - service.log - INFO - openSerial end
+2023-07-12 14:15:49,380 - service.log - ERROR - SerialException
+2023-07-12 14:15:49,381 - service.log - ERROR - [Errno 2] could not open port COM30: [Errno 2] No such file or directory: 'COM30'
+2023-07-12 14:15:49,381 - service.log - INFO - openSerial end
+2023-07-12 14:15:49,381 - service.log - ERROR - SerialException
+2023-07-12 14:15:49,381 - service.log - ERROR - [Errno 2] could not open port COM30: [Errno 2] No such file or directory: 'COM30'
+2023-07-12 14:15:49,382 - service.log - INFO - openSerial end
+2023-07-12 14:15:54,193 - service.log - ERROR - SerialException
+2023-07-12 14:15:54,193 - service.log - ERROR - [Errno 2] could not open port COM20: [Errno 2] No such file or directory: 'COM20'
+2023-07-12 14:15:54,193 - service.log - INFO - openSerial end
+2023-07-12 14:20:30,879 - service.log - INFO - SERVICE STARTED
+2023-07-12 15:32:39,291 - service.log - INFO - SERVICE STARTED
+2023-07-13 11:13:04,582 - service.log - INFO - SERVICE STARTED
+2023-07-13 15:45:52,484 - service.log - INFO - SERVICE STARTED
+2023-07-13 15:49:31,570 - service.log - INFO - SERVICE STARTED
+2023-07-13 15:50:22,575 - service.log - INFO - SERVICE STARTED
+2023-07-13 15:55:31,470 - service.log - INFO - SERVICE STARTED
+2023-07-13 15:56:16,723 - service.log - INFO - SERVICE STARTED
+2023-07-13 15:57:00,952 - service.log - INFO - SERVICE STARTED
+2023-07-13 16:01:04,761 - service.log - INFO - SERVICE STARTED
+2023-07-13 16:55:20,288 - service.log - INFO - SERVICE STARTED

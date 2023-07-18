@@ -17,6 +17,10 @@
     width: 80%;
     margin: auto;
 }
+
+.left-function {
+    margin-right: 10px; /* Adjust the value as per your preference */
+  }
 </style>
 
 <template>
@@ -28,7 +32,7 @@
                 <!-- 查询 -->
                 <Col span="7" align="left">
                     <FormItem >
-                    <Input search v-model="queryParam.searchRecord" placeholder="请输入" style="width: 90%" />
+                    <Input search v-model="queryParam.keyword" placeholder="请输入" style="width: 90%" />
                     </FormItem>
                 </Col>
 
@@ -37,10 +41,22 @@
                     <Button type="primary" @click="searchQuery" icon="search">查询</Button>
                 </Col>
 
-                <Col align="right" offset="8">
-                    <Button type="primary" @click="createNew" icon="search">新建</Button>
-                    <Button type="primary" @click="importTemp" icon="search">导入</Button>
-                    <Button type="primary" @click="downloadTemp" icon="search">下载模版</Button>
+                <Col align="right" offset="9">
+                <Row >
+                    <Col class="left-function">
+                        <Button type="primary" @click="createNew" icon="search">新建</Button>
+                    </Col>
+
+                    <Col class="left-function">
+                        <Upload action="//jsonplaceholder.typicode.com/posts/">
+                            <Button icon="ios-cloud-upload-outline">上传文件</Button>
+                        </Upload>
+                    </Col>
+
+                    <Col class="left-function">
+                        <Button type="primary" @click="downloadTemp" icon="search">下载模版</Button>
+                    </Col>
+                </Row>
                 </Col>
 
             </Row>
@@ -72,11 +88,13 @@
     flowData: [],
     data() {
         return {
+            file: null,
+            loadingStatus: false,
             isPyWebViewReady: false,
             queryParam: {
-                searchRecord: '',
-                columnRecord: '',
-                orderRecord: '',
+                keyword: '',
+                column: '',
+                orderBy: '',
             },
             
         }
@@ -90,11 +108,12 @@
         },
 
         createNew(){
-            console.log('creat new' )
+            console.log('creat new' );
+            this.$router.push('/add-flow'); 
         },
-        importTemp(){
-            console.log('import template' )
-        },
+        
+
+
         downloadTemp(){
             console.log('download template' )
         },

@@ -11,7 +11,7 @@
 <template>
     <div >
     
-            <Table border :columns="columns" :data="data">
+            <Table border :columns="columns" :data="searchData">
             </Table>
 
         <div class="page-bar">
@@ -37,6 +37,16 @@
 
     data() {
         return {
+            queryParam: {
+                deviceCode: '',
+                dateRecord: '',
+                taskId: '',
+                calcType: '',
+                page: '',
+                pageSize: '',
+                column: '',
+                orderBy: '',
+            },
             columns: [
             {
                 title: '序号',
@@ -49,8 +59,8 @@
             {
                 title: '传感器SN',
                 align: "center",
-                dataIndex: 'SNumber',
-                key: "SNNumber"
+                dataIndex: 'deviceCode',
+                key: "deviceCode"
                 //width: 240,
             },
             
@@ -71,8 +81,8 @@
             {
                 title: '传感器类型',
                 align: "center",
-                dataIndex: 'equiType',
-                key: 'equiType',
+                dataIndex: 'sensorType',
+                key: 'sensorType',
                 //width: 240,
             },
             {
@@ -92,42 +102,103 @@
             {
                 title: '测量值',
                 align: "center",
-                dataIndex: 'measureValue',
-                key: 'measureValue',
+                dataIndex: 'measure_Value',
+                key: 'measure_Value',
                 width: 100,
             },
             {
                 title: 'AD值',
                 align: "center",
-                dataIndex: 'ADValue',
-                key: 'ADValue',
+                dataIndex: 'AD_Value',
+                key: 'AD_Value',
             },
             {
                 title: '参考值',
                 align: "center",
-                dataIndex: 'referValue',
-                key: 'referValue',
+                dataIndex: 'refer_Value',
+                key: 'refer_Value',
                 width: 100,
             },
             {
                 title: '流程名称',
                 align: "center",
-                dataIndex: 'processName',
-                key: 'processName',
+                dataIndex: 'process_Name',
+                key: 'process_Name',
+                //width: 240,
+            },
+            {
+                title: '任务名称',
+                align: "center",
+                dataIndex: 'taskId',
+                key: 'taskId',
+                //width: 240,
+            },
+            {
+                title: '操作员',
+                align: "center",
+                dataIndex: 'stuff',
+                key: 'stuff',
                 //width: 240,
             },
             ],
-
+            searchData:[],
             data: [
                 {
-                    equiType: '35',
+                    sensorType: '35',
                     port: 1,
                     measureValue: 3,
                 },
             ],
         }
         },
+
+        //刷新pywebview
+        beforeCreate() {
+            this.isPyWebViewReady = (typeof pywebview !== 'undefined');
+        },
+        created() {
+            if (this.isPyWebViewReady) {
+                this.fetchFlowData(this.queryParam);
+            }
+        },
+        mounted() {
+            if (!this.isPyWebViewReady) {
+                window.addEventListener('load', () => {
+                    this.fetchFlowData(this.queryParam);
+                });
+            }
+        },
+
         methods: {
+            fetchFlowData(queryParam) {
+                //console.log("this is from the tabel", queryParam)
+                if (typeof pywebview === 'undefined') {
+                    console.log('pywebview is not yet defined. Retrying in 1 second...');
+                    setTimeout(() => this.fetchFlowData(queryParam), 10);
+                    return;
+                }
+                const params = {
+                    deviceCode: queryParam ? queryParam.deviceCode : '',
+                    dateRecord: queryParam ? queryParam.dateRecord : '',
+                    taskId: queryParam ? queryParam.taskId : '',
+                    calcType: queryParam ? queryParam.calcType : '',
+                    page: 1,
+                    pageSize:10,
+                    column: 'time',
+                    orderBy: 'desc',
+                };
+
+                console.log("1. this is from the tabel", params)
+                pywebview.api.queryData(JSON.stringify(params)).then(response => {
+                if (response.code === 200) {
+                    this.searchData = response.result;
+                    console.log("2. this is from", response)
+                } else {
+                    console.error('Error fetching flow data:', response.message);
+                }
+                });
+            },
+
         }
 
   }

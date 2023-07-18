@@ -15,6 +15,7 @@
     "view-design": "^4.5.0",
     "vue": "^2.7.14",
     "vue-router": "^3.0.1",
+    "vue-upload-component": "^2.8.23",
     "xlsx": "^0.13.5"
   },
   "devDependencies": {

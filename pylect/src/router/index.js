@@ -13,6 +13,8 @@ import TestPage from '@/components/TestPage.vue';
 
 //其他页面导航
 import ReportDetail from '@/components/ReportManagement/ReportDetail.vue';
+import EditFlow from '@/components/FlowManagement/EditFlow.vue';
+import AddFlow from '@/components/FlowManagement/AddFlow.vue';
 
 Vue.use(Router)
 
@@ -59,11 +61,23 @@ export default new Router({
       component: TestPage,
     },
 
-
+    //其他页面导航
     {
       path: '/report-detail', // :id is a dynamic segment
       name: 'ReportDetail',
       component: ReportDetail,
+      props: true, // Pass route.params to props
+    },
+    {
+      path: '/edit-flow/:id', // :id is a dynamic segment
+      name: 'EditFlow',
+      component: EditFlow,
+      props: true, // Pass route.params to props
+    },
+    {
+      path: '/add-flow', // :id is a dynamic segment
+      name: 'AddFlow',
+      component: AddFlow,
       props: true, // Pass route.params to props
     },
     

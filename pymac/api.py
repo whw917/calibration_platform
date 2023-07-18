@@ -10,6 +10,9 @@ from devices.stepmotor import Stepmotor
 from utils.csvutils import CsvUtils
 from utils.sysConfig import SysConfig
 
+import pandas as pd
+import json
+
 
 
 class Api:
@@ -285,8 +288,203 @@ class Api:
         }
         return response
 
+    def get_log_data(self):
+        mock_data = [
+            {
+                'index': 1,
+                'time': '2021-12-21 13:45:00',
+                'operation': '倒入传感器',
+                'parameter': 'mock parameter',
+                'content': 'mock content'
+            },
+
+        ]
+        response = {
+            'code': 200,
+            'message': 'OK',
+            'result': mock_data
+        }
+        return response
+
+    def read_flow_data(self, file_name, columns):
+        csv_utils = CsvUtils()
+        data = csv_utils.read(file_name)
+
+        # Convert list of lists to DataFrame
+        df = pd.DataFrame(data, columns=columns)
+
+        # Convert DataFrame to JSON
+        json_data = json.loads(df.to_json(orient='records', indent=4))
+        return df
+
+    def queryFlow(self, params):
+        json_params = json.loads(params)
+        keyword = json_params['keyword']
+        column = json_params['column']
+        orderby = json_params['orderby']
+
+        columns = ['id', 'flow_name', 'flow_type', 'driver', 'sensor_protocol', 'device_name', 'device_protocol',
+                   'move_seconds', 'wait_seconds',
+                   'read_times', 'calcuate_method', 'precise', 'sensor_sum', 'sensor_name', 'scale_list']
+
+        df = self.read_flow_data('flow_data.csv', columns)
+
+        # notes: add filter and sort data based on the parameters
+        #
+        #
+
+        json_data = json.loads(df.to_json(orient='records', indent=4))
+
+        response = {
+            'code': 200,
+            'message': 'OK',
+            'result': json_data
+        }
+
+        return response
+
+    def editFlow(self, flow_data):
+        flow_data = json.loads(flow_data)
+        flow_id = flow_data.get('id')
+
+        columns = ['id', 'flow_name', 'flow_type', 'driver', 'sensor_protocol', 'device_name', 'device_protocol',
+                   'move_seconds', 'wait_seconds',
+                   'read_times', 'calcuate_method', 'precise', 'sensor_sum', 'sensor_name', 'scale_list']
+        df = self.read_flow_data('flow_data.csv', columns)
+
+        # find the row with id
+        row_to_edit = df.loc[df['id'] == flow_id]
+        # return an error if no row was found,
+        if row_to_edit.empty:
+            response = {
+                'code': 404,
+                'message': 'No flow found with that id.'
+            }
+            return response
+
+        # Update the row ( update csv for now)
+        for key, value in flow_data.items():
+            if key in df.columns:
+                df.loc[df['id'] == flow_id, key] = value
+
+        csv_utils = CsvUtils()
+        new_data = df.values.tolist()
+        csv_utils.write(new_data, 'flow_data.csv')
+
+        # notes: more states needed
+        response = {
+            'code': 200,
+            'message': 'Flow data updated successfully.'
+        }
+        return response
+
+    def getFlow(self, flow_id):
+        columns = ['id', 'flow_name', 'flow_type', 'driver', 'sensor_protocol', 'device_name', 'device_protocol',
+                   'move_seconds', 'wait_seconds',
+                   'read_times', 'calcuate_method', 'precise', 'sensor_sum', 'sensor_name', 'scale_list']
+        df = self.read_flow_data('flow_data.csv', columns)
+
+        # find the row with id
+        row_to_fetch = df.loc[df['id'] == flow_id]
+
+        # return an error if no row was found
+        if row_to_fetch.empty:
+            response = {
+                'code': 404,
+                'message': 'No flow found with that id.'
+            }
+        else:
+            response = {
+                'code': 200,
+                'message': 'Flow fetched successfully.',
+                'result': row_to_fetch.to_dict(orient='records')[0]  # Convert the DataFrame row to a dictionary
+            }
+        return response
+
+    def addFlow(self, flow_data):
+        flow_data = json.loads(flow_data)
+
+        columns = ['id', 'flow_name', 'flow_type', 'driver', 'sensor_protocol', 'device_name', 'device_protocol',
+                   'move_seconds', 'wait_seconds', 'read_times', 'calcuate_method', 'precise', 'sensor_sum',
+                   'sensor_name', 'scale_list']
+        df = self.read_flow_data('flow_data.csv', columns)
+
+        # Convert the 'id' column to integer type
+        df['id'] = df['id'].astype(int)
+
+        # Now it's safe to find the max id and add 1 to create a new id
+        new_id = df['id'].max() + 1
+
+        # Assign the new id to the flow_data dictionary
+        flow_data['id'] = str(new_id)
+
+        # Create a new DataFrame for the new flow data
+        new_flow_df = pd.DataFrame([flow_data])
+
+        # Concatenate the original DataFrame with the new DataFrame
+        df = pd.concat([df, new_flow_df], ignore_index=True)
+
+        csv_utils = CsvUtils()
+        new_data = df.values.tolist()
+        csv_utils.write(new_data, 'flow_data.csv')
+
+        response = {
+            'code': 200,
+            'message': 'Flow data added successfully.'
+        }
+        return response
+
+    def deleteFlow(self, flow_id):
+        columns = ['id', 'flow_name', 'flow_type', 'driver', 'sensor_protocol', 'device_name', 'device_protocol',
+                   'move_seconds', 'wait_seconds', 'read_times', 'calcuate_method', 'precise', 'sensor_sum',
+                   'sensor_name', 'scale_list']
+        df = self.read_flow_data('flow_data.csv', columns)
+
+        # Check if the flow_id exists in the DataFrame
+        if flow_id not in df['id'].values:
+            response = {
+                'code': 404,
+                'message': 'No flow found with that id.'
+            }
+            return response
+
+        # Remove the row with the specified flow_id
+        df = df[df['id'] != flow_id]
+
+        csv_utils = CsvUtils()
+        new_data = df.values.tolist()
+        csv_utils.write(new_data, 'flow_data.csv')
+
+        response = {
+            'code': 200,
+            'message': 'Flow data deleted successfully.'
+        }
+        return response
+
+
 if __name__ == '__main__':
     str_item = '[["1","99002310","COM20","1"],["2","99002311","COM20","2"],["3","99002312","COM20","3"],["4","99002313","COM20","4"],["5","99002314","COM20","5"],["6","99002315","COM20","6"],["7","99002316","COM20","7"],["8","99002317","COM20","8"],["9","99002318","COM20","9"],["10","99002319","COM20","10"],["11","99002320","COM20","11"],["12","99002321","COM20","12"],["13","99002322","COM20","13"],["14","99002323","COM20","14"],["15","99002324","COM20","15"],["16","99002325","COM20","16"]]'
-    # str_item = '{"a": 1234}'
+    #str_item = '{"a": 1234}'
     json_item = json.loads(str_item)
-    print(json_item)
+    #print(json_item)
+
+    api = Api()  # Create an instance of the Api class
+
+    # Test queryFlow method
+    # Define some dummy params
+    params = {
+        "keyword": "some keyword",
+        "column": "some column",
+        "orderby": "desc"
+    }
+    result = api.queryFlow(json.dumps(params))
+    print(result)
+
+
+
+
+
+
+
+
+

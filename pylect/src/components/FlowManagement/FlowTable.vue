@@ -47,9 +47,9 @@
             flowData: [],
 
             queryParam: {
-                searchRecord: '',
-                columnRecord: '',
-                orderRecord: '',
+                keyword: '',
+                column: '',
+                orderBy: '',
             },
             
             columns: [
@@ -177,6 +177,7 @@
         }
         },
     
+    //刷新pywebview
     beforeCreate() {
         this.isPyWebViewReady = (typeof pywebview !== 'undefined');
     },
@@ -194,17 +195,19 @@
     },
     methods: {
         fetchFlowData(queryParam) {
+            //console.log("this is from the tabel", queryParam)
             if (typeof pywebview === 'undefined') {
-            console.log('pywebview is not yet defined. Retrying in 1 second...');
-            setTimeout(() => this.fetchFlowData(queryParam), 10);
-            return;
-        }
+                console.log('pywebview is not yet defined. Retrying in 1 second...');
+                setTimeout(() => this.fetchFlowData(queryParam), 10);
+                return;
+            }
             const params = {
-            keyword: queryParam ? queryParam.searchRecord : '',
-            column: 'time',  // Sort by time, for example
-            orderby: 'desc',  // In descending order, for example
+                keyword: queryParam ? queryParam.keyword : '',
+                column: 'time',  // Sort by time, for example
+                orderby: 'desc',  // In descending order, for example
             };
 
+            console.log("1. this is from the tabel", queryParam)
             pywebview.api.queryFlow(JSON.stringify(params)).then(response => {
             if (response.code === 200) {
                 this.flowData = response.result;
@@ -214,15 +217,31 @@
             });
         },
         edit(row) {
-            // Use the $router.push method to navigate
-            console.log('edit operation for', row)
-            //this.$emit('refresh');
+            const id = row.id; 
+            console.log("id is: ", id)
+            this.$router.push({ name: 'EditFlow', params: { id: row.id } });
+            
         },
+
         deleteRow(row) {
-            console.log('preiview operation for', row)
-            //this.$emit('refresh');
-            // handle delete operation here
-        }
+            console.log('preparing to delete row', row)
+            this.$Modal.confirm({
+                title: 'Confirm Deletion',
+                content: 'Are you sure you want to delete this flow?',
+                onOk: () => {
+                    pywebview.api.deleteFlow(row.id).then(response => {
+                        if (response.code === 200) {
+                            console.log('Flow data deleted successfully.');
+                            this.fetchFlowData(this.queryParam); // fetch the data again after deletion
+                        } else {
+                            console.error('Error deleting flow data:', response.message);
+                        }
+                    });
+                },
+            });
+        },
+
+
     }
 
   }
