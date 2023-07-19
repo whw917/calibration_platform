@@ -66,7 +66,7 @@
 
                 <Row  style="display: flex; justify-content: space-between;" glutter="32"> 
                     <Col  flex="1">
-                      <Table border :columns="columns" :data="data"></Table>
+                      <Table border :columns="columns" :data="taskData"></Table>
                     </Col>
                   
                     <Col flex="7"> 
@@ -110,6 +110,9 @@
                 taskId: '',
                 reporttype: 'prod',
             },
+            taskParam: {
+                dateRecord: '',
+            },
 
             columns: [
                 {
@@ -119,7 +122,8 @@
                 },
                 {
                     title: '任务名称',
-                    dataIndex: 'taskName',
+                    dataIndex: 'taskId',
+                    key: 'taskId',
                     align:"center",
                 },
             ],
@@ -139,7 +143,7 @@
                     }
                 ],
 
-            data: [
+            taskData: [
                 {
 
                 }
@@ -149,14 +153,49 @@
         }
     },
 
-    
-
+    //刷新pywebview
+    beforeCreate() {
+            this.isPyWebViewReady = (typeof pywebview !== 'undefined');
+        },
+    created() {
+        if (this.isPyWebViewReady) {
+            this.updateTaskList(this.taskParam);
+        }
+    },
+    mounted() {
+        if (!this.isPyWebViewReady) {
+            window.addEventListener('load', () => {
+                this.updateTaskList(this.taskParam);
+            });
+        }
+    },
     methods :{
         searchQuery() {
             this.$refs.uncollapsedTable.fetchReportData(this.queryParam);
             console.log('1 search.',this.queryParam);
         },
+        updateTaskList(queryParam) {
+            if (typeof pywebview === 'undefined') {
+                console.log('pywebview is not yet defined. Retrying in 1 second...');
+                setTimeout(() => this.updateTaskList(queryParam), 1000);
+                return;
+            }
+            const params = {
+                dateRecord: queryParam ? queryParam.dateRecord : '',
+            };
+            pywebview.api.queryTask(JSON.stringify(params)).then(response => {
+                console.log('3. ',response)
+                if (response.code === 200) {
+                    this.taskList = response.result.map(task => ({ value: task, label: task }));
+                    console.log('4. ',response.result)
+                    this.taskData = response.result; // Update the data for the Table
+                } else {
+                    console.error('Error fetching task list:', response.message);
+                }
+            });
+        },
     }
+
 
   }
   </script>

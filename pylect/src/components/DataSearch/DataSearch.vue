@@ -183,7 +183,7 @@
             };
             pywebview.api.queryTask(JSON.stringify(params)).then(response => {
             if (response.code === 200) {
-                this.taskList = response.result.map(task => ({ value: task, label: task }));
+                this.taskList = response.task_list.map(task => ({ value: task, label: task }));
                 this.$refs.dataSearchTable.taskList = this.taskList; // Update the prop in child component
             } else {
                 console.error('Error fetching task list:', response.message);
