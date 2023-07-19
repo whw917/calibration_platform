@@ -48,7 +48,7 @@
         <Row> 
             <Col class="left-col">
                 <FormItem class="form-item-label"  label="流程名称:" >
-                    <Input class="name-bar" v-model="queryParam.flow_name" placeholder="name" clearable />
+                    <Input class="name-bar" v-model="queryParam.flow_name" placeholder="输入流程名称" clearable />
                 </FormItem>
 
                 <FormItem class="form-item-label" label="流程类型:">
@@ -76,29 +76,29 @@
             <Col  class="right-col"> 
 
                 <FormItem class="form-item-label" label="设备名称:">
-                    <Input class="other-bar" v-model="queryParam.device_name" placeholder="name" clearable />
+                    <Input class="other-bar" v-model="queryParam.device_name" placeholder="输入设备名称" clearable />
                 </FormItem>
 
                 <FormItem class="form-item-label" label="设备协议:">
-                    <Input class="other-bar" v-model="queryParam.device_protocol" placeholder="name" clearable />
+                    <Input class="other-bar" v-model="queryParam.device_protocol" placeholder="输入设备协议" clearable />
                 </FormItem>
 
                 <FormItem class="form-item-label" label="运动时间(s):">
-                    <Input class="other-bar" v-model="queryParam.move_seconds" placeholder="name" clearable />
+                    <Input class="other-bar" v-model="queryParam.move_seconds" placeholder="输入运动时间" clearable />
                 </FormItem>
 
                 <FormItem class="form-item-label" label="读数延时(s):">
-                    <Input class="other-bar" v-model="queryParam.wait_seconds" placeholder="name" clearable />
+                    <Input class="other-bar" v-model="queryParam.wait_seconds" placeholder="输入读数延时" clearable />
                 </FormItem>
             </Col> 
 
             <Col class="right-col">
                 <FormItem class="form-item-label" label="读数次数(次):">
-                    <Input class="other-bar" v-model="queryParam.read_times" placeholder="name" clearable />
+                    <Input class="other-bar" v-model="queryParam.read_times" placeholder="输入读数次数" clearable />
                 </FormItem>
 
                 <FormItem class="form-item-label" label="平台精度:">
-                    <Input class="other-bar" v-model="queryParam.precise" placeholder="name" clearable />
+                    <Input class="other-bar" v-model="queryParam.precise" placeholder="输入平台精度" clearable />
                 </FormItem>
 
                 <FormItem class="form-item-label" label="传感器轴数:">
@@ -117,7 +117,7 @@
 
         </Row>
                 <FormItem label="点数列表:"  class="point-bar">
-                    <Input v-model="queryParam.scale_list" placeholder="name" size="large" clearable />
+                    <Input v-model="queryParam.scale_list" placeholder="输入点数列表" size="large" clearable />
 
                     <Row class="buttons">
                     

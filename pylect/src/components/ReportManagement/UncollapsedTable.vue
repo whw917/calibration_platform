@@ -150,14 +150,6 @@
             }
         },
         methods: {
-            expand(row) {
-                // Use the $router.push method to navigate
-                this.$router.push({ name: 'ReportDetail', params: { rowData: row } });
-            },
-            preview(row) {
-                console.log('preiview operation for', row)
-                // handle delete operation here
-            },
             fetchReportData() {
                 if (typeof pywebview === 'undefined') {
                     console.log('pywebview is not yet defined. Retrying in 1 second...');
@@ -179,6 +171,14 @@
                         console.error('Error fetching report data:', response.message);
                     }
                 });
+            },
+            expand(row) {
+                // Use the $router.push method to navigate
+                this.$router.push({ name: 'ReportDetail', params: { rowData: row } }); 
+            },
+            preview(row) {
+                console.log('preiview operation for', row)
+                // handle delete operation here
             },
         }
 }

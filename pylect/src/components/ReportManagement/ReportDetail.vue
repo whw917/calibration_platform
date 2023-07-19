@@ -32,7 +32,7 @@
             <!-- 时间查询 -->
             <Col span="6" align="left">
                 <p><strong>设备名称:</strong> {{ rowData.taskName }}</p>
-                <p><strong>设备编号:</strong> {{ rowData.equiNumber }}</p>
+                <p><strong>设备编号:</strong> {{ rowData.device_code }}</p>
             </Col>
 
 
@@ -47,9 +47,9 @@
 
 
             <Col span="6" align="right">
-                <p><strong>标定任务名称:</strong></p>
-                <p><strong>标定流程名称:</strong></p>
-                <p><strong>标定时间:</strong></p>
+                <p><strong>标定任务名称:</strong> {{ rowData.taskName }} </p>
+                <p><strong>标定流程名称:</strong> {{ rowData.taskName }} </p>
+                <p><strong>标定时间:</strong> {{ rowData.date }} </p>
             </Col>
         </Row>
 
