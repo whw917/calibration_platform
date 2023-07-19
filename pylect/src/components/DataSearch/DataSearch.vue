@@ -154,17 +154,17 @@
     beforeCreate() {
             this.isPyWebViewReady = (typeof pywebview !== 'undefined');
         },
-        created() {
-            if (this.isPyWebViewReady) {
+    created() {
+        if (this.isPyWebViewReady) {
+            this.updateTaskList(this.taskParam);
+        }
+    },
+    mounted() {
+        if (!this.isPyWebViewReady) {
+            window.addEventListener('load', () => {
                 this.updateTaskList(this.taskParam);
-            }
-        },
-        mounted() {
-            if (!this.isPyWebViewReady) {
-                window.addEventListener('load', () => {
-                    this.updateTaskList(this.taskParam);
-                });
-            }
+            });
+        }
     },
 
     methods :{

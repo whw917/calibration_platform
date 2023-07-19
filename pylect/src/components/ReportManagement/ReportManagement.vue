@@ -34,7 +34,7 @@
                 <!-- 任务名称，设备编号或芯片号 模糊查询 -->
                 <Col span="5" align="left">
                     <FormItem >
-                    <Input search v-model="queryParam.searchRecord" placeholder="请输入任务名称，设备编号或芯片号" style="width: 90%" />
+                    <Input search v-model="queryParam.keyword" placeholder="请输入任务名称，设备编号或芯片号" style="width: 90%" />
                     </FormItem>
                 </Col>
 
@@ -42,7 +42,7 @@
                 <Col span="2" align="left">
                     <FormItem >
                         <Select  style="width:80%">
-                            <Option v-for="item in choicelist" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                            <Option v-model="queryParam.result" v-for="item in choicelist" :value="item.value" :key="item.value">{{ item.label }}</Option>
                         </Select>
                     </FormItem>
                 </Col>
@@ -71,8 +71,8 @@
                   
                     <Col flex="7"> 
                         
-                        <CollapsedTable  v-if="!isCollapse" />
-                        <UncollapsedTable v-else />
+                        <UncollapsedTable ref="uncollapsedTable" v-if="!isCollapse" />
+                        <CollapsedTable ref="collapsedTable" v-else />
 
                     </Col>
                 </Row>
@@ -105,7 +105,10 @@
             isCollapse: false,
             queryParam: {
                 dateRecord: '',
-                searchRecord: '',
+                keyword: '',
+                result: '',
+                taskId: '',
+                reporttype: 'prod',
             },
 
             columns: [
@@ -119,12 +122,6 @@
                     dataIndex: 'taskName',
                     align:"center",
                 },
-            ],
-
-            data: [
-                {
-
-                }
             ],
 
             choicelist: [
@@ -141,11 +138,23 @@
                         label: '不合格'
                     }
                 ],
+
+            data: [
+                {
+
+                }
+            ],
+
+            
         }
     },
-    methods :{
-        searchQuery(){
 
+    
+
+    methods :{
+        searchQuery() {
+            this.$refs.uncollapsedTable.fetchReportData(this.queryParam);
+            console.log('1 search.',this.queryParam);
         },
     }
 
