@@ -66,7 +66,7 @@
 
                 <Row  style="display: flex; justify-content: space-between;" glutter="32"> 
                     <Col  flex="1">
-                      <Table border :columns="columns" :data="taskData"></Table>
+                        <Table border :columns="columns" :data="taskData" @on-selection-change="handleSelectionChange"></Table>
                     </Col>
                   
                     <Col flex="7"> 
@@ -193,6 +193,12 @@
                     console.error('Error fetching task list:', response.message);
                 }
             });
+        },
+        handleSelectionChange(selection) {
+            if (selection.length > 0) {
+                this.queryParam.taskId = selection[0].taskId;
+                this.searchQuery();
+            }
         },
     }
 
