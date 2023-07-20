@@ -54,7 +54,7 @@
                     </Col>
 
                     <Col class="left-function">
-                        <Button type="primary" @click="downloadTemp" icon="search">下载模版</Button>
+                        <Button type="primary" @click="download" icon="search">下载模版</Button>
                     </Col>
                 </Row>
                 </Col>
@@ -105,6 +105,7 @@
         searchQuery() {
             this.$refs.flowTable.fetchFlowData(this.queryParam);
             console.log(this.queryParam);
+            console.log('121:', this.$refs.flowTable.fetchFlowData(this.queryParam));
         },
 
         createNew(){
@@ -114,7 +115,7 @@
         
 
 
-        downloadTemp(){
+        download(){
             console.log('download template' )
         },
     }
