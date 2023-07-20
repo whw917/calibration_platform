@@ -62,7 +62,7 @@
             </Row>
 
             <div class="table-page">
-                <FlowTable ref="flowTable" />
+                <FlowTable ref="flowTable" @data-fetched="handleDataFetched" />
             </div>   
 
         </Form>
@@ -88,6 +88,7 @@
     flowData: [],
     data() {
         return {
+            flowData: [],
             file: null,
             loadingStatus: false,
             isPyWebViewReady: false,
@@ -105,7 +106,6 @@
         searchQuery() {
             this.$refs.flowTable.fetchFlowData(this.queryParam);
             console.log(this.queryParam);
-            console.log('121:', this.$refs.flowTable.fetchFlowData(this.queryParam));
         },
 
         createNew(){
@@ -113,11 +113,38 @@
             this.$router.push('/add-flow'); 
         },
         
-
-
-        download(){
-            console.log('download template' )
+        handleDataFetched(data) {
+            this.flowData = data;
         },
+        download() {
+            const csvData = this.convertToCSV(this.flowData);
+            const blob = new Blob(['\uFEFF' + csvData], { type: 'text/csv;charset=utf-8;' });  // prepend BOM and set charset as utf-8
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'flowdata.csv'); // Explicitly set the download attribute
+            document.body.appendChild(link); // Append link to the body
+            link.click();
+            document.body.removeChild(link); // Remove link from the body
+            setTimeout(() => URL.revokeObjectURL(url), 0);
+        },
+
+
+        convertToCSV(objArray) {
+            const array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+            let str = `${Object.keys(array[0]).map(value => `"${value}"`).join(",")}` + '\r\n';
+
+            for (let i = 0; i < array.length; i++) {
+                let line = '';
+                for (let index in array[i]) {
+                    if (line != '') line += ','
+                    line += `"${array[i][index]}"`;
+                }
+                str += line + '\r\n';
+            }
+            return str;
+        },
+
     }
 
   }

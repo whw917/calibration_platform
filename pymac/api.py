@@ -461,6 +461,98 @@ class Api:
         }
         return response
 
+    def queryData(self, params):
+        json_params = json.loads(params)
+        deviceCode = json_params['deviceCode']
+        dateRecord = json_params['dateRecord']
+        taskId = json_params['taskId']
+        calcType = json_params['calcType']
+        page = json_params['page']
+        pageSize = json_params['pageSize']
+        column = json_params['column']
+        orderBy = json_params['orderBy']
+
+        # Define the columns of the DataFrame
+        columns = ['deviceCode', 'port', 'address', 'sensorType', 'channel', 'time', 'measure_Value', 'AD_Value',
+                   'refer_Value', 'process_Name', 'taskId', 'stuff']
+
+        df = self.read_flow_data('search_data.csv', columns)
+        print('0.', df)
+
+        # Convert the DataFrame to JSON
+        json_data = json.loads(df.to_json(orient='records', indent=4))
+
+        response = {
+            'code': 200,
+            'message': 'OK',
+            'result': json_data
+        }
+        return response
+
+    import pandas as pd
+    from datetime import datetime
+
+    def queryTask(self, params):
+        # Load the parameters
+        json_params = json.loads(params)
+        dateRecord = json_params['dateRecord']
+
+        # Define the columns of the DataFrame
+        columns = ['time', 'taskId']
+
+        df = self.read_flow_data('task_data.csv', columns)
+
+
+        '''#condistion
+        if dateRecord:
+            df = df[df['time'].between(dateRecord[0], dateRecord[1])]
+        '''
+        # Get the unique tasks
+        tasks = df['taskId'].unique().tolist()
+        json_data = json.loads(df.to_json(orient='records'))
+
+        response = {
+            'code': 200,
+            'message': 'OK',
+            'result': json_data,
+            'task_list': tasks,
+        }
+        return response
+
+    def queryReport(self, params):
+        # Parse parameters
+        json_params = json.loads(params)
+        dateRecord = json_params.get('dateRecord')
+        keyword = json_params.get('keyword')
+        result = json_params.get('result')
+        taskId = json_params.get('taskId')
+        reporttype = json_params.get('reporttype')
+
+        # Define the columns of the DataFrame
+        columns = ['reportID','taskName', 'device_code', 'chip_Num', 'sensor_Type', 'date', 'precise', 'conclusion']
+
+        df = self.read_flow_data('report_data_uncol.csv', columns)  # replace with your actual data file and reader function
+
+        # Filter by dateRecord if provided
+        '''
+        if dateRecord:
+            # Assuming dateRecord is a list [start_date, end_date] in format 'YYYY-MM-DD'
+            start_date, end_date = dateRecord
+            df = df[(df['date'] >= start_date) & (df['date'] <= end_date)]
+        '''
+
+        # Convert the filtered DataFrame to a list of dicts
+        json_data = json.loads(df.to_json(orient='records'))
+
+        # Return as a JSON response
+        response = {
+            'code': 200,
+            'message': 'OK',
+            'result': json_data
+        }
+        return response
+
+    #def queryReportDetail(self, params)
 
 if __name__ == '__main__':
     str_item = '[["1","99002310","COM20","1"],["2","99002311","COM20","2"],["3","99002312","COM20","3"],["4","99002313","COM20","4"],["5","99002314","COM20","5"],["6","99002315","COM20","6"],["7","99002316","COM20","7"],["8","99002317","COM20","8"],["9","99002318","COM20","9"],["10","99002319","COM20","10"],["11","99002320","COM20","11"],["12","99002321","COM20","12"],["13","99002322","COM20","13"],["14","99002323","COM20","14"],["15","99002324","COM20","15"],["16","99002325","COM20","16"]]'
@@ -472,12 +564,19 @@ if __name__ == '__main__':
 
     # Test queryFlow method
     # Define some dummy params
-    params = {
-        "keyword": "some keyword",
-        "column": "some column",
-        "orderby": "desc"
+    params1 = {
+
+        'dateRecord' : "",
+        'keyword' : "",
+        'result' : "",
+        'taskId' : "",
+        'reporttype' : "",
     }
-    result = api.queryFlow(json.dumps(params))
+
+    params2 = {
+        "dateRecord": "",
+    }
+    result = api.queryTask(json.dumps(params2))
     print(result)
 
 
