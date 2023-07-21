@@ -10,7 +10,7 @@
 
 <template>
     <div >
-            <Table border :columns="columns" :data="flowData">
+            <Table border :columns="columns" :data="pagedData">
                 <template v-slot:operation="{ row }"> 
 
                     <a @click="edit(row)" >编辑</a>
@@ -20,9 +20,9 @@
                 </template>
             </Table>
 
-        <div class="page-bar">
-            <Page :total="100" />
-        </div>
+            <div class="page-bar">
+                <Page :total="flowData.length" :current="currentPage" @on-change="handlePageChange" />
+            </div>            
 
     </div>
 </template>
@@ -45,6 +45,8 @@
     data() {
         return {
             flowData: [],
+            pageSize: 10,
+            currentPage: 1,
 
             queryParam: {
                 keyword: '',
@@ -177,6 +179,19 @@
         }
         },
     
+    computed: {
+        // Create a computed property for the data of the current page
+        pagedData() {
+            const start = (this.currentPage - 1) * this.pageSize;
+            const end = start + this.pageSize;
+            return this.flowData.slice(start, end);
+        },
+
+        // Calculate the total number of pages
+        totalPages() {
+            return Math.ceil(this.flowData.length / this.pageSize);
+        }
+    },
     //刷新pywebview
     beforeCreate() {
         this.isPyWebViewReady = (typeof pywebview !== 'undefined');
@@ -209,13 +224,16 @@
 
             console.log("1. this is from the tabel", queryParam)
             pywebview.api.queryFlow(JSON.stringify(params)).then(response => {
-            if (response.code === 200) {
-                this.flowData = response.result;
-                this.$emit('data-fetched', this.flowData); 
-            } else {
-                console.error('Error fetching flow data:', response.message);
-            }
+                if (response.code === 200) {
+                    this.flowData = response.result;
+                    this.$emit('data-fetched', this.flowData); 
+                } else {
+                    console.error('Error fetching flow data:', response.message);
+                }
             });
+        },
+        handlePageChange(page) {
+            this.currentPage = page;
         },
         edit(row) {
             const id = row.id; 
