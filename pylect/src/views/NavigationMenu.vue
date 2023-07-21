@@ -8,37 +8,37 @@
             <DropdownMenu slot="list">
 
               <DropdownItem name="Home">
-                <Icon type="md-home"></Icon>
+                <img :src="require('../images/main_page.png')" alt="home-icon" style="width: 13px; height: 13px;">
                 主页面
               </DropdownItem>
 
               <DropdownItem name="FlowManagement">
-                <Icon type="md-settings"></Icon>
+                <img :src="require('../images/flow_management.png')" alt="home-icon" style="width: 13px; height: 13px;">
                 流程管理
               </DropdownItem>
 
               <DropdownItem name="DataSearch">
-                <Icon type="md-settings"></Icon>
+                <img :src="require('../images/data_search.png')" alt="home-icon" style="width: 13px; height: 13px;">
                 数据查询
               </DropdownItem>
 
               <DropdownItem name="ReportManagement">
-                <Icon type="md-settings"></Icon>
+                <img :src="require('../images/report_management.png')" alt="home-icon" style="width: 13px; height: 13px;">
                 标定报告
               </DropdownItem>
 
               <DropdownItem name="LogManagement">
-                <Icon type="md-settings"></Icon>
+                <img :src="require('../images/log_management.png')" alt="home-icon" style="width: 13px; height: 13px;">
                 日志管理
               </DropdownItem>
 
               <DropdownItem name="SystemParameter">
-                <Icon type="md-settings"></Icon>
+                <img :src="require('../images/parameter.png')" alt="home-icon" style="width: 13px; height: 13px;">
                 参数设置
               </DropdownItem>
             
               <DropdownItem name="UpdatePassword">
-                <Icon type="md-settings"></Icon>
+                <img :src="require('../images/update_password.png')" alt="home-icon" style="width: 13px; height: 13px;">
                 更改密码
               </DropdownItem>
 
