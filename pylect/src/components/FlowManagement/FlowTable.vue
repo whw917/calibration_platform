@@ -211,6 +211,7 @@
             pywebview.api.queryFlow(JSON.stringify(params)).then(response => {
             if (response.code === 200) {
                 this.flowData = response.result;
+                this.$emit('data-fetched', this.flowData); 
             } else {
                 console.error('Error fetching flow data:', response.message);
             }

@@ -101,7 +101,6 @@
         }
     },
     
-    
     methods :{
         searchQuery() {
             this.$refs.flowTable.fetchFlowData(this.queryParam);
@@ -117,17 +116,23 @@
             this.flowData = data;
         },
         download() {
-            const csvData = this.convertToCSV(this.flowData);
-            const blob = new Blob(['\uFEFF' + csvData], { type: 'text/csv;charset=utf-8;' });  // prepend BOM and set charset as utf-8
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'flowdata.csv'); // Explicitly set the download attribute
-            document.body.appendChild(link); // Append link to the body
-            link.click();
-            document.body.removeChild(link); // Remove link from the body
-            setTimeout(() => URL.revokeObjectURL(url), 0);
+            console.log('flowData:', this.flowData);  // log the flow data
+            if (this.flowData && this.flowData.length > 0) {
+                const csvData = this.convertToCSV(this.flowData);
+                const blob = new Blob(['\uFEFF' + csvData], { type: 'text/csv;charset=utf-8;' });  // prepend BOM and set charset as utf-8
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'flowdata.csv'); // Explicitly set the download attribute
+                document.body.appendChild(link); // Append link to the body
+                link.click();
+                document.body.removeChild(link); // Remove link from the body
+                setTimeout(() => URL.revokeObjectURL(url), 0);
+            } else {
+                console.log('No data to download');
+            }
         },
+
 
 
         convertToCSV(objArray) {
