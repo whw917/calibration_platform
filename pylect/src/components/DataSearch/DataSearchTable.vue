@@ -145,7 +145,6 @@
                 //width: 240,
             },
             ],
-            searchData:[],
             data: [
                 {
                     sensorType: '35',

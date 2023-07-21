@@ -11,12 +11,12 @@
 <template>
     <div >
     
-            <Table border :columns="columns" :data="data">
-            </Table>
+        <Table border :columns="columns" :data="pagedData">
+        </Table>
 
         <div class="page-bar">
-            <Page :total="100" />
-        </div>
+            <Page :total="logData.length" :current="currentPage" @on-change="handlePageChange" />
+        </div>     
 
     </div>
 </template>
@@ -37,6 +37,14 @@
 
     data() {
         return {
+            logData:[],
+            pageSize: 10,
+            currentPage: 1,
+
+            // !!!需要补充
+            queryParam: {
+            },
+
             columns: [
             {
                 title: '序号',
@@ -82,17 +90,62 @@
             ],
         }
         },
-        methods: {
+        computed: {
+            // Create a computed property for the data of the current page
+            pagedData() {
+                const start = (this.currentPage - 1) * this.pageSize;
+                const end = start + this.pageSize;
+                return this.logData.slice(start, end);
+            },
+
+            // Calculate the total number of pages
+            totalPages() {
+                return Math.ceil(this.logData.length / this.pageSize);
+            }
+        },
+
+        //刷新pywebview
+        beforeCreate() {
+            this.isPyWebViewReady = (typeof pywebview !== 'undefined');
         },
         created() {
-            pywebview.api.get_log_data().then(response => {
-                if (response.code === 200) {
-                    this.data = response.result;
-                } else {
-                    console.error('Error fetching log data:', response.message);
-                }
-            });
+            if (this.isPyWebViewReady) {
+                this.fetchFlowData(this.queryParam);
+            }
         },
+        mounted() {
+            if (!this.isPyWebViewReady) {
+                window.addEventListener('load', () => {
+                    this.fetchFlowData(this.queryParam);
+                });
+            }
+        },
+
+        methods: {
+            fetchFlowData(queryParam) {
+                //console.log("this is from the tabel", queryParam)
+                if (typeof pywebview === 'undefined') {
+                    console.log('pywebview is not yet defined. Retrying in 1 second...');
+                    setTimeout(() => this.fetchFlowData(queryParam), 10);
+                    return;
+                }
+                const params = {
+                };
+
+                pywebview.api.queryLog(JSON.stringify(params)).then(response => {
+                if (response.code === 200) {
+                    this.logData = response.result;
+                    //console.log("2. this is from", response)
+                } else {
+                    console.error('Error fetching flow data:', response.message);
+                }
+                });
+            },
+            handlePageChange(page) {
+                this.currentPage = page;
+            },
+
+        }
 
   }
   </script>
