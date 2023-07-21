@@ -59,91 +59,66 @@
   export default {
     data() {
       const validatePass = (rule, value, callback) => {
-        if (value === "") {
-          callback(new Error("请输入密码"));
+        if (value === '') {
+          callback(new Error('请输入密码'));
         } else {
-          if (this.formCustom.passwdCheck !== "") {
-            // 对第二个密码框单独验证
-            this.$refs.formCustom.validateField("passwdCheck");
-          }
           callback();
         }
       };
       const validatePassCheck = (rule, value, callback) => {
-        if (value === "") {
-          callback(new Error("请在此输入密码"));
-        } else if (value.length < 6 || value.length > 8) {
-          callback(new Error("密码长度应在6到8个字符之间"));
-        }else if (value !== this.formCustom.passwd) {
-          callback(new Error("两次输入的密码不同"));
+        if (value === '') {
+          callback(new Error('请在此输入密码'));
+        } else if (value !== this.formCustom.passwd) {
+          callback(new Error('两次输入的密码不同'));
         } else {
           callback();
         }
       };
-      const validateOldPasswd = (rule, value, callback) => {
-        let params = {
-          password: value,
-        };
-        pywebview.api.checkPassword(JSON.stringify(params)).then((res) => {
-          if (res.code === 201) {
-            callback(new Error("旧密码错误"));
-          } else {
-            callback();
-          }
-        });
-      };
-  
       return {
         formCustom: {
-          oldPasswd: "",
-          passwd: "",
-          passwdCheck: "",
+          oldPasswd: '',
+          passwd: '',
+          passwdCheck: '',
         },
         ruleCustom: {
           oldPasswd: [
-            { validator: validateOldPasswd, trigger: "blur" },
+            { validator: validatePass, trigger: 'blur' },
           ],
           passwd: [
-            { validator: validatePass, trigger: "blur" },
+            { validator: validatePass, trigger: 'blur' },
           ],
           passwdCheck: [
-            { validator: validatePassCheck, trigger: "blur" },
+            { validator: validatePassCheck, trigger: 'blur' },
           ],
         },
       };
     },
     methods: {
       handleSubmit(name) {
-  
-    
         this.$refs[name].validate((valid) => {
-          console.log('Form validation result:', valid);
           if (valid) {
             let paramsA = {
               password: this.formCustom.oldPasswd,
             };
-            
-            pyCheckPassowrd( paramsA , function( res ){
-                console.log( res )
-            })
-  
-            let paramsB = {
-              oldPassword: this.formCustom.oldPasswd,
-              newPassword: this.formCustom.passwd,
-            };
-            pySetPassowrd( paramsB , function( res ){
-                console.log( res)
-            })
-            
-            pywebview.api.setPassword(JSON.stringify(paramsB)).then((res) => {
+            pywebview.api.checkPassword(JSON.stringify(paramsA)).then((res) => {
               if (res.code === 200) {
-                this.$Message.success("密码更新成功!");
+                let paramsB = {
+                  oldPassword: this.formCustom.oldPasswd,
+                  newPassword: this.formCustom.passwd,
+                };
+                pywebview.api.setPassword(JSON.stringify(paramsB)).then((res) => {
+                  if (res.code === 200) {
+                    this.$Message.success('密码更新成功!');
+                  } else {
+                    this.$Message.error('密码更新失败!');
+                  }
+                });
               } else {
-                this.$Message.error("密码更新失败!");
+                this.$Message.error('旧密码错误!');
               }
             });
           } else {
-            this.$Message.error("表单验证失败!");
+            this.$Message.error('表单验证失败!');
           }
         });
       },
@@ -151,7 +126,7 @@
         this.$refs[name].resetFields();
       },
     },
-  
   };
+
   </script>
   
