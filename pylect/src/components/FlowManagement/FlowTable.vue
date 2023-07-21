@@ -20,6 +20,7 @@
                 </template>
             </Table>
 
+            <!-- 分页功能-->
             <div class="page-bar">
                 <Page :total="flowData.length" :current="currentPage" @on-change="handlePageChange" />
             </div>            
@@ -44,6 +45,7 @@
 
     data() {
         return {
+            //分页功能
             flowData: [],
             pageSize: 10,
             currentPage: 1,
@@ -179,6 +181,7 @@
         }
         },
     
+    //分页功能
     computed: {
         // Create a computed property for the data of the current page
         pagedData() {
@@ -192,6 +195,7 @@
             return Math.ceil(this.flowData.length / this.pageSize);
         }
     },
+
     //刷新pywebview
     beforeCreate() {
         this.isPyWebViewReady = (typeof pywebview !== 'undefined');
@@ -208,6 +212,7 @@
             });
         }
     },
+    
     methods: {
         fetchFlowData(queryParam) {
             //console.log("this is from the tabel", queryParam)

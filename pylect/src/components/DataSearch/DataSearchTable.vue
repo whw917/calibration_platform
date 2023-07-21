@@ -11,12 +11,12 @@
 <template>
     <div >
     
-            <Table border :columns="columns" :data="searchData">
-            </Table>
+        <Table border :columns="columns" :data="pagedData">
+        </Table>
 
         <div class="page-bar">
-            <Page :total="100" />
-        </div>
+            <Page :total="searchData.length" :current="currentPage" @on-change="handlePageChange" />
+        </div>         
 
     </div>
 </template>
@@ -37,6 +37,9 @@
 
     data() {
         return {
+            searchData:[],
+            pageSize: 10,
+            currentPage: 1,
 
             queryParam: {
                 deviceCode: '',
@@ -153,6 +156,19 @@
         }
         },
 
+        computed: {
+            // Create a computed property for the data of the current page
+            pagedData() {
+                const start = (this.currentPage - 1) * this.pageSize;
+                const end = start + this.pageSize;
+                return this.searchData.slice(start, end);
+            },
+
+            // Calculate the total number of pages
+            totalPages() {
+                return Math.ceil(this.searchData.length / this.pageSize);
+            }
+        },
         //刷新pywebview
         beforeCreate() {
             this.isPyWebViewReady = (typeof pywebview !== 'undefined');
@@ -198,6 +214,9 @@
                     console.error('Error fetching flow data:', response.message);
                 }
                 });
+            },
+            handlePageChange(page) {
+                this.currentPage = page;
             },
 
         }

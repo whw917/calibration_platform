@@ -75,6 +75,8 @@
   import FlowTable from './FlowTable.vue'
 
   export default {
+    flowData: [],
+    
     components: {
       Input,
       Button,
@@ -85,7 +87,7 @@
       FlowTable,
 
     },
-    flowData: [],
+    
     data() {
         return {
             flowData: [],
