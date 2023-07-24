@@ -66,13 +66,21 @@
 
                 <Row  style="display: flex; justify-content: space-between;" glutter="32"> 
                     <Col  flex="1">
-                        <Table border :columns="columns" :data="taskData" @on-selection-change="handleSelectionChange"></Table>
+                        
+                        <Table 
+                            border 
+                            :columns="columns" 
+                            :data="taskData" 
+                            highlight-row 
+                            @on-row-click="handleRowClick"
+                        ></Table>
                     </Col>
                   
                     <Col flex="7"> 
                         
-                        <UncollapsedTable ref="uncollapsedTable" v-if="!isCollapse" />
-                        <CollapsedTable ref="collapsedTable" v-else />
+                        <UncollapsedTable ref="uncollapsedTable" v-show="!isCollapse" />
+                        <CollapsedTable ref="collapsedTable" v-show="isCollapse" />
+
 
                     </Col>
                 </Row>
@@ -103,6 +111,8 @@
     data() {
         return {
             isCollapse: false,
+            highlightedRow: null,
+
             queryParam: {
                 dateRecord: '',
                 keyword: '',
@@ -115,11 +125,6 @@
             },
 
             columns: [
-                {
-                type: 'selection',
-                align: 'center',
-                width: '10%',
-                },
                 {
                     title: '任务名称',
                     dataIndex: 'taskId',
@@ -172,6 +177,7 @@
     methods :{
         searchQuery() {
             this.$refs.uncollapsedTable.fetchReportData(this.queryParam);
+            this.$refs.collapsedTable.fetchReportData(this.queryParam);
             console.log('1 search.',this.queryParam);
         },
         updateTaskList(queryParam) {
@@ -194,12 +200,12 @@
                 }
             });
         },
-        handleSelectionChange(selection) {
-            if (selection.length > 0) {
-                this.queryParam.taskId = selection[0].taskId;
-                this.searchQuery();
-            }
-        },
+        handleRowClick(row, event) {
+        this.highlightedRow = row;
+        this.queryParam.taskId = row.taskId;
+        this.searchQuery();
+    },
+
     }
 
 

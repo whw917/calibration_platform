@@ -13,7 +13,7 @@
 
           
         <Col >
-            <Table border :columns="columns" :data="data">
+            <Table border :columns="columns" :data="reportData">
                 <template v-slot:operation="{ row }"> 
 
                     <a @click="expand(row)" >详情</a>
@@ -27,8 +27,8 @@
 
 
         <div class="page-bar">
-            <Page :total="100" />
-        </div>
+            <Page :total="reportData.length" :current="currentPage" @on-change="handlePageChange" />
+        </div>  
 
     </div>
 </template>
@@ -49,6 +49,11 @@
 
     data() {
         return {
+            //分页功能
+            reportData: [],
+            pageSize: 10,
+            currentPage: 1,
+
             columns: [
             {
                 type: 'selection',
@@ -67,22 +72,22 @@
             {
                 title: '设备编号',
                 align: "center",
-                dataIndex: 'equiNumber',
-                key:'equiNumber'
+                dataIndex: 'device_code',
+                key:'device_code'
                 //width: 240,
             },
             {
                 title: '传感器类型',
                 align: "center",
-                dataIndex: 'equiType',
-                key: 'equiType',
+                dataIndex: 'sensor_Type',
+                key: 'sensor_Type',
                 //width: 240,
             },
             {
                 title: '标定日期',
                 align: "center",
-                dataIndex: 'caliTime',
-                key: 'caliTime',
+                dataIndex: 'date',
+                key: 'date',
                 //width: 240,
             },
             {
@@ -107,28 +112,80 @@
                 width: 150,
             },
             ],
-
-            
-
-
             data: [
                 {
                     taskName: 'New York',
-                
                 }
             ],
         }
+    },
+
+    computed: {
+            pagedData() {
+                const start = (this.currentPage - 1) * this.pageSize;
+                const end = start + this.pageSize;
+                return this.reportData.slice(start, end);
+            },
+
+            // Calculate the total number of pages
+            totalPages() {
+                return Math.ceil(this.reportData.length / this.pageSize);
+            }
         },
+
+        // 刷新 pywebview
+        beforeCreate() {
+            this.isPyWebViewReady = (typeof pywebview !== 'undefined');
+        },
+        created() {
+            if (this.isPyWebViewReady) {
+                this.fetchReportData();
+            }
+        },
+        mounted() {
+            if (!this.isPyWebViewReady) {
+                window.addEventListener('load', () => {
+                    this.fetchReportData();
+                });
+            }
+        },
+
         methods: {
+            handlePageChange(page) {
+                this.currentPage = page;
+            },
+            fetchReportData() {
+                if (typeof pywebview === 'undefined') {
+                    console.log('pywebview is not yet defined. Retrying in 1 second...');
+                    setTimeout(() => this.fetchReportData(), 1000);
+                    return;
+                }
+                const params = {
+                    dateRecord: '',
+                    keyword: '',
+                    result: '',
+                    taskId: '',
+                    reporttype: 'prod',
+                };
+                pywebview.api.queryColReport(JSON.stringify(params)).then(response => {
+                    console.log('11.',response);
+                    if (response.code === 200) {
+                        this.reportData = response.result;
+                    } else {
+                        console.error('Error fetching report data:', response.message);
+                    }
+                });
+            },
             expand(row) {
                 // Use the $router.push method to navigate
-                this.$router.push({ name: 'ReportDetail', params: { rowData: row } });
+                this.$router.push({ name: 'ReportDetail', params: { rowData: row } }); 
             },
             preview(row) {
                 console.log('preiview operation for', row)
                 // handle delete operation here
-            }
+            },
         }
+}
 
-  }
+  
   </script>

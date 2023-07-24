@@ -13,7 +13,7 @@
 
           
         <Col >
-            <Table border :columns="columns" :data="data">
+            <Table border :columns="columns" :data="reportData">
                 <template v-slot:operation="{ row }"> 
 
                     <a @click="expand(row)" >详情</a>
@@ -27,8 +27,8 @@
 
 
         <div class="page-bar">
-            <Page :total="100" />
-        </div>
+            <Page :total="reportData.length" :current="currentPage" @on-change="handlePageChange" />
+        </div>      
 
     </div>
 </template>
@@ -49,6 +49,11 @@
 
     data() {
         return {
+            //分页功能
+            reportData: [],
+            pageSize: 10,
+            currentPage: 1,
+
             columns: [
             {
                 type: 'selection',
@@ -121,18 +126,27 @@
                 width: 150,
             },
             ],
-
-            
-
-
             data: [
                 {
                     taskName: 'New York',
-                
                 }
             ],
         }
         },
+
+        computed: {
+            pagedData() {
+                const start = (this.currentPage - 1) * this.pageSize;
+                const end = start + this.pageSize;
+                return this.reportData.slice(start, end);
+            },
+
+            // Calculate the total number of pages
+            totalPages() {
+                return Math.ceil(this.reportData.length / this.pageSize);
+            }
+        },
+
         // 刷新 pywebview
         beforeCreate() {
             this.isPyWebViewReady = (typeof pywebview !== 'undefined');
@@ -150,6 +164,9 @@
             }
         },
         methods: {
+            handlePageChange(page) {
+                this.currentPage = page;
+            },
             fetchReportData() {
                 if (typeof pywebview === 'undefined') {
                     console.log('pywebview is not yet defined. Retrying in 1 second...');
@@ -166,7 +183,7 @@
                 pywebview.api.queryReport(JSON.stringify(params)).then(response => {
                     console.log('11.',response);
                     if (response.code === 200) {
-                        this.data = response.result;
+                        this.reportData = response.result;
                     } else {
                         console.error('Error fetching report data:', response.message);
                     }
