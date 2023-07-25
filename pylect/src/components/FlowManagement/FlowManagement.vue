@@ -74,6 +74,13 @@
   import { Input, Button, Table, Page, Space, model, FormItem} from 'view-design'
   import FlowTable from './FlowTable.vue'
 
+  function pyQueryFlow(params, callback){
+        pywebview.api.queryFlow(JSON.stringify(params)).then(res => {          
+            callback(res)
+        })
+    }
+
+
   export default {
     flowData: [],
     
@@ -101,6 +108,20 @@
             },
             
         }
+    },
+    
+    mounted() {
+        let  params = {
+            "keyword": this.queryParam.keyword,
+            "column": "flow_name",
+            "orderby": "desc",
+            "page": "1",
+            "pageSize": 10
+        }
+        pyQueryFlow(params, function( res ){
+            console.log( res )
+        }
+        )
     },
     
     methods :{
